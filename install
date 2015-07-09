@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+source "$(dirname $0)/../common/functions"
+
+if [[ ! -f /etc/sudoers.d/dokku-docker-cp ]]; then
+  echo '%dokku ALL=(ALL) NOPASSWD:/usr/bin/docker cp' > /etc/sudoers.d/dokku-docker-cp
+fi

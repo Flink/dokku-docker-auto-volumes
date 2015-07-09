@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+source "$(dirname $0)/../common/functions"
+
+APP="$1"
+APP_ROOT="$DOKKU_ROOT/$APP"
+IMAGE="dokku/$APP"
+VOLUMES=$(docker inspect --format='{{range $volume, $value := .Config.Volumes}}{{$volume}}{{"\n"}}{{end}}' "$IMAGE")
+ID=$(docker run -d "$IMAGE" true)
+
+for VOLUME in $VOLUMES; do
+  VOLUME_PATH="$APP_ROOT/.volumes$VOLUME"
+  VOLUME_DIR=$(dirname "$VOLUME_PATH")
+  if [[ -e $VOLUME_PATH ]]; then
+    continue
+  fi
+  mkdir -p "$VOLUME_DIR"
+  docker cp "$ID":"$VOLUME" "$VOLUME_DIR"
+  dokku docker-options:add "$APP" run,deploy "-v $VOLUME_PATH:$VOLUME"
+done
+
+docker rm "$ID"
+exit 0
