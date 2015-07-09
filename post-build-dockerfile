@@ -15,7 +15,7 @@ for VOLUME in $VOLUMES; do
     continue
   fi
   mkdir -p "$VOLUME_DIR"
-  docker cp "$ID":"$VOLUME" "$VOLUME_DIR"
+  sudo docker cp "$ID":"$VOLUME" "$VOLUME_DIR"
   dokku docker-options:add "$APP" run,deploy "-v $VOLUME_PATH:$VOLUME"
 done
 
