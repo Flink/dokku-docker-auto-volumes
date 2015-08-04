@@ -19,5 +19,6 @@ for VOLUME in $VOLUMES; do
   dokku docker-options:add "$APP" run,deploy "-v $VOLUME_PATH:$VOLUME"
 done
 
+docker wait "$ID"
 docker rm "$ID"
 exit 0
