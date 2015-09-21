@@ -8,9 +8,13 @@ dokku-docker-auto-volumes is a plugin for [dokku][dokku] that automatically pers
 
 ## Installation
 
-```
-git clone https://github.com/Flink/dokku-docker-auto-volumes /var/lib/dokku/plugins/docker-auto-volumes
-dokku plugins-install
+```shell
+# dokku 0.3.26
+$ git clone https://github.com/Flink/dokku-docker-auto-volumes /var/lib/dokku/plugins/docker-auto-volumes
+$ dokku plugins-install
+
+# dokku 0.4+
+$ dokku plugin:install https://github.com/Flink/dokku-docker-auto-volumes.git
 ```
 
 ## Info
