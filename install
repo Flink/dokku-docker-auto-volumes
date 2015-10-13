@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+source "$(dirname "$0")/config"
 
-if [[ ! -f /etc/sudoers.d/dokku-docker-cp ]]; then
-  echo '%dokku ALL=(ALL) NOPASSWD:/usr/bin/docker cp *' > /etc/sudoers.d/dokku-docker-cp
+if [[ ! -d $VOLUMES_ROOT ]]; then
+  mkdir -p "$VOLUMES_ROOT"
+  chown dokku:dokku "$VOLUMES_ROOT"
 fi

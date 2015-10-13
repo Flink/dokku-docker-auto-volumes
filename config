@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+export VOLUMES_ROOT=${VOLUMES_ROOT:="/var/lib/dokku/volumes"}

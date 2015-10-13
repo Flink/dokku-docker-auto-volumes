@@ -6,24 +6,22 @@ if [[ -n $DOKKU_API_VERSION ]]; then
   PLUGIN_BASE_PATH="$PLUGIN_ENABLED_PATH"
 fi
 source "$PLUGIN_BASE_PATH/common/functions"
+source "$(dirname "$0")/config"
 
 APP="$1"
-APP_ROOT="$DOKKU_ROOT/$APP"
+APP_VOLUME="$VOLUMES_ROOT/$APP"
 IMAGE="dokku/$APP"
 VOLUMES=$(docker inspect --format='{{range $volume, $value := .Config.Volumes}}{{$volume}}{{"\n"}}{{end}}' "$IMAGE")
-ID=$(docker run -d "$IMAGE" true)
 
 for VOLUME in $VOLUMES; do
-  VOLUME_PATH="$APP_ROOT/.volumes$VOLUME"
+  VOLUME_PATH="$APP_VOLUME$VOLUME"
   VOLUME_DIR=$(dirname "$VOLUME_PATH")
   if [[ -e $VOLUME_PATH ]]; then
     continue
   fi
   mkdir -p "$VOLUME_DIR"
-  sudo docker cp "$ID":"$VOLUME" "$VOLUME_DIR"
+  docker run --rm -v "$VOLUME_DIR:/target" "$IMAGE" cp -a "$VOLUME" /target
   dokku docker-options:add "$APP" run,deploy "-v $VOLUME_PATH:$VOLUME"
 done
 
-docker wait "$ID"
-docker rm "$ID"
 exit 0
