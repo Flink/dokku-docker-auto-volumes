@@ -6,3 +6,7 @@ if [[ ! -d $VOLUMES_ROOT ]]; then
   mkdir -p "$VOLUMES_ROOT"
   chown dokku:dokku "$VOLUMES_ROOT"
 fi
+
+if ! docker images | grep -q -e "^busybox "; then
+  docker pull busybox:latest
+fi

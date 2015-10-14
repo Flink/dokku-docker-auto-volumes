@@ -8,9 +8,7 @@ fi
 source "$PLUGIN_BASE_PATH/common/functions"
 source "$(dirname "$0")/config"
 
-APP="$1"
-APP_VOLUME="$VOLUMES_ROOT/$APP"
-IMAGE="dokku/$APP"
+APP="$1"; APP_VOLUME="$VOLUMES_ROOT/$APP"; IMAGE="dokku/$APP"
 VOLUMES=$(docker inspect --format='{{range $volume, $value := .Config.Volumes}}{{$volume}}{{"\n"}}{{end}}' "$IMAGE")
 
 for VOLUME in $VOLUMES; do
