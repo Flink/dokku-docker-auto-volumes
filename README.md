@@ -2,6 +2,8 @@
 
 dokku-docker-auto-volumes is a plugin for [dokku][dokku] that automatically persist docker volumes declared in the Dockerfile.
 
+/var/lib/dokku/volumes 
+
 ## Requirements
 
 * Dokku 0.3.17+ (for the `docker-options` plugin)
@@ -18,8 +20,6 @@ $ dokku plugin:install https://github.com/Flink/dokku-docker-auto-volumes.git
 ```
 
 ## Info
-
-This plugin adds a `/etc/sudoers.d/dokku-docker-cp` file to allow ownership preservation when copying files from container to the host (using `docker cp`).
 
 It will persist volumes into `$DOKKU_ROOT/$APP/.volumes`.
 
