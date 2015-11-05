@@ -18,7 +18,7 @@ for VOLUME in $VOLUMES; do
     continue
   fi
   mkdir -p "$VOLUME_DIR"
-  docker run --rm -v "$VOLUME_DIR:/target" busybox cp -a "$VOLUME" /target
+  docker run --rm -v "$VOLUME_DIR:/target" "$IMAGE" cp -a "$VOLUME" /target
   dokku docker-options:add "$APP" run,deploy "-v $VOLUME_PATH:$VOLUME"
 done
 
