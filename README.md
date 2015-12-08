@@ -19,9 +19,7 @@ $ dokku plugin:install https://github.com/Flink/dokku-docker-auto-volumes.git
 
 ## Info
 
-This plugin adds a `/etc/sudoers.d/dokku-docker-cp` file to allow ownership preservation when copying files from container to the host (using `docker cp`).
-
-It will persist volumes into `$DOKKU_ROOT/$APP/.volumes`.
+This plugin will persist volumes into `/var/lib/dokku/volumes/$APP`.
 
 ## License
 
