@@ -10,7 +10,7 @@ source "$(dirname "$0")/config"
 
 APP="$1"; APP_VOLUME="$VOLUMES_ROOT/$APP"
 if [[ -e $APP_VOLUME ]]; then
-  docker run --rm -v "$VOLUMES_ROOT:/volumes" busybox chmod 777 -R /volumes
+  docker run --rm -v "$APP_VOLUME:/volumes" busybox chmod 777 -R /volumes
   rm -rf "$APP_VOLUME"
 fi
 exit 0
