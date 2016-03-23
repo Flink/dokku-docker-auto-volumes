@@ -12,13 +12,27 @@ APP="$1"; APP_VOLUME="$VOLUMES_ROOT/$APP"; IMAGE="dokku/$APP"
 VOLUMES=$(docker inspect --format='{{range $volume, $value := .Config.Volumes}}{{$volume}}{{"\n"}}{{end}}' "$IMAGE")
 
 for VOLUME in $VOLUMES; do
+  # Add slashes before spaces
+  VOLUME=$(echo "$VOLUME" | awk '{gsub(/ /,"\\ ")}8')
   VOLUME_PATH="$APP_VOLUME$VOLUME"
   VOLUME_DIR=$(dirname "$VOLUME_PATH")
   if [[ -e $VOLUME_PATH ]]; then
     continue
   fi
+  dokku_log_info1 "VOLUME: Prepearing for: $VOLUME"
   mkdir -p "$VOLUME_DIR"
-  docker run --rm -v "$VOLUME_DIR:/target" "$IMAGE" cp -a "$VOLUME" /target
+  dokku_log_verbose_quiet "VOLUME: Copying files from container ($VOLUME) to host ($VOLUME_PATH)"
+  # Copy container files into host folder
+  ENTRYPOINT=/tmp/$(openssl rand -hex 8)
+  cat <<EOF  >> "$ENTRYPOINT"
+#!/bin/sh
+cp -a "$VOLUME" /target
+EOF
+  chmod +x "$ENTRYPOINT"
+  docker run --rm -v "$VOLUME_DIR:/target" -v "$ENTRYPOINT:/entrypoint" --entrypoint="/entrypoint" "$IMAGE"
+  rm "$ENTRYPOINT"
+  # Add docker volume options
+  dokku_log_verbose_quiet "VOLUME: Adding docker options: $APP run,deploy -v $VOLUME_PATH:$VOLUME"
   dokku docker-options:add "$APP" run,deploy "-v $VOLUME_PATH:$VOLUME"
 done
 
